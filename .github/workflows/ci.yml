@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    name: lint, test, build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test
+      # A production build needs the public config present.
+      - run: npm run build
+        env:
+          VEILPROOF_API_URL: http://localhost:8080
+          VEILPROOF_REGISTRY_CONTRACT_ID: CDQKYOYWBUAFZUZIAX4YDTLWYTYWPAV3AOSCUJJ2PWNRCECVV5F6XX73
+          VEILPROOF_RPC_URL: https://soroban-testnet.stellar.org
+          VEILPROOF_NETWORK_PASSPHRASE: "Test SDF Network ; September 2015"
