@@ -21,7 +21,7 @@ jobs:
       # A production build needs the public config present.
       - run: npm run build
         env:
-          VEILPROOF_API_URL: http://localhost:8080
+          VEILPROOF_API_URL: https://veilproof-server.onrender.com
           VEILPROOF_REGISTRY_CONTRACT_ID: CC4IXULTDJ5OPE2YOBNIROD2HME2VA7QNK2NDCIUQQ453PZGFZVDMJFR
           VEILPROOF_RPC_URL: https://soroban-testnet.stellar.org
           VEILPROOF_NETWORK_PASSPHRASE: "Test SDF Network ; September 2015"
