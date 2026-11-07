@@ -21,9 +21,16 @@ export function StartPage({ config }: { config: Config }) {
       <ol className="stack steps">
         <li>
           Install the <a href="https://varialwallet.com">Varial</a> browser extension (formerly
-          Freighter) and switch it to {networkName(config.networkPassphrase)}. Then press{" "}
-          <strong>Connect wallet</strong> at the top of the page and pick <strong>Freighter</strong>{" "}
-          in the list, which is still its name there.
+          Freighter). In Varial, open <strong>Settings</strong>, then <strong>Network</strong>, and
+          set <strong>Current Network</strong> to {networkName(config.networkPassphrase)}. Do this
+          before connecting: on Mainnet, Varial asks for real XLM and warns that this site is
+          flagged as malicious. Its scanner says that about every site on a free host, including
+          stellar.github.io, and it doesn't scan at all on Testnet.
+        </li>
+        <li>
+          Press <strong>Connect wallet</strong> at the top of the page, pick{" "}
+          <strong>Freighter</strong> in the list (Varial&apos;s old name there), unlock Varial if it
+          asks, and approve the request.
           {isTestnet(config.networkPassphrase) ? (
             <>
               {" "}
