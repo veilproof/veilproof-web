@@ -7,23 +7,25 @@ the first rule is about copy, not code.
 ## Ground rules
 
 - **Never overstate the privacy guarantee.** The UI must not claim stronger
-  privacy than the system provides. In particular: the holder's secret **is**
-  sent to veilproof-server to generate the proof — do not imply it stays in the
-  browser. Cross-check any privacy copy against veilproof-registry and
-  veilproof-server's own security notes. The `TrustNotice` tests guard this;
-  keep them meaningful.
-- **Keep the on-chain read independent.** The verification lookup reads state
-  straight from the contract via RPC (`src/chain/reads.ts`), not through the
-  backend API. Don't route it through `src/api` — the independence is the point.
-- **No client-side proof generation.** Proving is veilproof-server's job; the
-  web only requests proofs and submits them.
+  privacy than the system provides. In particular: the secret stays in the browser
+  only as far as the code the page loaded can be trusted, so say that too.
+  Cross-check any privacy copy against veilproof-registry and veilproof-server's
+  own security notes. The `TrustNotice` tests guard this; keep them meaningful.
+- **Never send, log, or persist the holder's secret.** It lives in component state
+  and the prover worker, and nowhere else. `npm run e2e` fails if it appears in a
+  network request.
+- **Keep it static.** The deployed app has no backend, which is why its link keeps
+  working. A feature that needs a server needs a very good reason.
+- **Keep on-chain reads direct.** They go straight to the contract via RPC
+  (`src/chain/reads.ts`). The independence is the point.
+- **Don't reimplement the cryptography in TypeScript.** Commitments, roots, and
+  proofs all come from the WebAssembly prover, so they can't drift from the circuit.
 
 ## Development
 
 ```sh
 npm install
-cp .env.example .env.local   # then edit
-npm run dev                  # dev server
+npm run dev                  # dev server, against the public testnet registry
 npm test                     # Vitest
 npm run lint                 # eslint + prettier --check
 npm run build                # type-check + production build
@@ -40,5 +42,4 @@ npm run build                # type-check + production build
 
 ## Out of scope (MVP)
 
-Client-side proving, a full design system, and multiple circuit types — one
-fixed credential flow only.
+A full design system, and multiple circuit types — one fixed credential flow only.
