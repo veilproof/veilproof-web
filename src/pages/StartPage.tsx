@@ -20,12 +20,14 @@ export function StartPage({ config }: { config: Config }) {
       <h2>Try it yourself</h2>
       <ol className="stack steps">
         <li>
-          Install <a href="https://www.freighter.app">Freighter</a> and switch it to{" "}
-          {networkName(config.networkPassphrase)}. Then <strong>Connect wallet</strong>
+          Install the <a href="https://varialwallet.com">Varial</a> browser extension (formerly
+          Freighter) and switch it to {networkName(config.networkPassphrase)}. Then{" "}
+          <strong>Connect wallet</strong> and pick <strong>Freighter</strong> in the list, which is
+          still its name there.
           {isTestnet(config.networkPassphrase) ? (
             <>
               {" "}
-              and press <strong>Get test XLM</strong>, which is free and has no value.
+              Then press <strong>Get test XLM</strong>, which is free and has no value.
             </>
           ) : null}
         </li>
