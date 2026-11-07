@@ -132,6 +132,17 @@ describe("HolderPage", () => {
     expect(within(shared).queryByText(SECRET)).toBeNull();
   });
 
+  it("does not offer the secret to the browser's password manager or spellcheck", () => {
+    render(
+      <HolderPage config={config} prover={fakeProver()} reader={fakeReader()} address={ADDRESS} />,
+    );
+    const field = screen.getByLabelText(/your secret \(hex\)/i);
+    expect(field).toHaveAttribute("type", "text");
+    expect(field).toHaveAttribute("autocomplete", "off");
+    expect(field).toHaveAttribute("spellcheck", "false");
+    expect(document.querySelector('input[type="password"]')).toBeNull();
+  });
+
   it("never persists the secret", async () => {
     const user = userEvent.setup();
     render(
