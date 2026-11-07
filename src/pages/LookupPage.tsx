@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { ChainReader } from "../chain/reads";
+import { describeError } from "../chain/errors";
 
 type State = "idle" | "loading" | "done" | "error";
 
@@ -8,6 +9,8 @@ export function LookupPage({ reader }: { reader: ChainReader }) {
   const [credential, setCredential] = useState("");
   const [state, setState] = useState<State>("idle");
   const [verified, setVerified] = useState(false);
+  const [issuer, setIssuer] = useState<string | null>(null);
+  const [open, setOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   async function check(e: React.FormEvent) {
@@ -15,10 +18,18 @@ export function LookupPage({ reader }: { reader: ChainReader }) {
     setState("loading");
     setError(null);
     try {
-      setVerified(await reader.isVerified(holder.trim(), credential.trim()));
+      const name = credential.trim();
+      const [isVerified, owner, isOpen] = await Promise.all([
+        reader.isVerified(holder.trim(), name),
+        reader.issuerOf(name),
+        reader.openRegistration(),
+      ]);
+      setVerified(isVerified);
+      setIssuer(owner);
+      setOpen(isOpen);
       setState("done");
     } catch (err) {
-      setError(err instanceof Error ? err.message : String(err));
+      setError(describeError(err));
       setState("error");
     }
   }
@@ -28,8 +39,8 @@ export function LookupPage({ reader }: { reader: ChainReader }) {
       <h1>Verification lookup</h1>
       <p className="muted">
         Check whether an address is verified for a credential. This reads{" "}
-        <strong>directly from the contract</strong> over RPC — not from the veilproof-server backend
-        — so the answer does not depend on trusting the API.
+        <strong>directly from the contract</strong> over RPC, so the answer does not depend on
+        trusting this site's operator.
       </p>
 
       <form onSubmit={check} className="stack">
@@ -60,6 +71,15 @@ export function LookupPage({ reader }: { reader: ChainReader }) {
         <div className={verified ? "result ok" : "result no"}>
           {verified ? "✓ Verified" : "Not verified"}
           <div className="muted small">Read from the contract at ledger time via Soroban RPC.</div>
+          <div className="muted small">
+            Issuer of this credential: <span className="mono">{issuer ?? "nobody"}</span>
+          </div>
+          {open ? (
+            <div className="muted small">
+              This is an open sandbox registry, where anyone can claim a credential name. Here,
+              “verified” means only that this address is in the set of whoever claimed it.
+            </div>
+          ) : null}
         </div>
       ) : null}
       {state === "error" ? <div className="error">{error}</div> : null}
