@@ -6,9 +6,13 @@
   "license": "Apache-2.0",
   "description": "Web dashboard for veilproof: manage credential trees, generate and submit membership proofs, and look up on-chain verification status.",
   "scripts": {
+    "fetch-prover": "node scripts/fetch-prover.mjs",
+    "predev": "npm run fetch-prover",
     "dev": "vite",
+    "prebuild": "npm run fetch-prover",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
+    "pretest": "npm run fetch-prover",
     "test": "vitest run",
     "lint": "eslint . && prettier --check .",
     "format": "prettier --write ."
