@@ -90,7 +90,7 @@ before a reset are gone with it.
 - **TypeScript + React 19 + Vite 8**, Vitest for tests.
 - **`@stellar/stellar-sdk` 17** for on-chain reads and building/submitting the
   contract invocations.
-- **`@creit.tech/stellar-wallets-kit` 2.6** for wallet connection (Freighter,
+- **`@creit.tech/stellar-wallets-kit` 2.6** for wallet connection (Varial, formerly Freighter,
   xBull, and others through one interface).
 
 ## Quickstart
