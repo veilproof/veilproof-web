@@ -212,9 +212,18 @@ export function HolderPage({
             <form onSubmit={generate} className="stack">
               <label>
                 Your secret (hex)
+                {/* Deliberately not a password field: browsers offer to save those to
+                    the user's account, ignoring autoComplete. Spellcheck is off because
+                    enhanced spellcheck can send typed text to a server. */}
                 <input
-                  type="password"
+                  type="text"
+                  className="mono"
                   autoComplete="off"
+                  autoCorrect="off"
+                  autoCapitalize="off"
+                  spellCheck={false}
+                  data-1p-ignore
+                  data-lpignore="true"
                   value={secret}
                   onChange={(e) => setSecret(e.target.value)}
                   placeholder="the secret behind your commitment"
