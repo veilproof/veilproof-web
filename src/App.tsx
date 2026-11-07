@@ -1,14 +1,15 @@
 import { useMemo, useState } from "react";
 import { loadConfig } from "./config";
-import { ApiClient } from "./api/client";
 import { makeChainReader } from "./chain/reads";
+import { makeProver } from "./prover/client";
 import { WalletBar } from "./components/WalletBar";
 import { TrustBanner } from "./components/TrustNotice";
+import { StartPage } from "./pages/StartPage";
 import { LookupPage } from "./pages/LookupPage";
 import { HolderPage } from "./pages/HolderPage";
 import { IssuerPage } from "./pages/IssuerPage";
 
-type Tab = "lookup" | "holder" | "issuer";
+type Tab = "start" | "lookup" | "holder" | "issuer";
 
 export function App() {
   const { config, configError } = useMemo(() => {
@@ -19,13 +20,13 @@ export function App() {
     }
   }, []);
 
-  const [tab, setTab] = useState<Tab>("lookup");
+  const [tab, setTab] = useState<Tab>("start");
   const [address, setAddress] = useState<string | null>(null);
 
-  const api = useMemo(() => (config ? new ApiClient(config.apiUrl) : null), [config]);
+  const prover = useMemo(() => (config ? makeProver() : null), [config]);
   const reader = useMemo(() => (config ? makeChainReader(config) : null), [config]);
 
-  if (!config || !api || !reader) {
+  if (!config || !prover || !reader) {
     return (
       <main className="app">
         <h1>veilproof</h1>
@@ -52,6 +53,9 @@ export function App() {
       <TrustBanner />
 
       <nav className="tabs">
+        <button className={tab === "start" ? "active" : ""} onClick={() => setTab("start")}>
+          Start
+        </button>
         <button className={tab === "lookup" ? "active" : ""} onClick={() => setTab("lookup")}>
           Lookup
         </button>
@@ -63,13 +67,18 @@ export function App() {
         </button>
       </nav>
 
+      {tab === "start" ? <StartPage config={config} /> : null}
       {tab === "lookup" ? <LookupPage reader={reader} /> : null}
-      {tab === "holder" ? <HolderPage config={config} api={api} address={address} /> : null}
-      {tab === "issuer" ? <IssuerPage config={config} api={api} address={address} /> : null}
+      {tab === "holder" ? (
+        <HolderPage config={config} prover={prover} reader={reader} address={address} />
+      ) : null}
+      {tab === "issuer" ? (
+        <IssuerPage config={config} prover={prover} reader={reader} address={address} />
+      ) : null}
 
       <footer className="muted small">
-        Unaudited, experimental. Reads on the Lookup tab come straight from the contract; everything
-        else goes through veilproof-server.
+        Unaudited, experimental. Proofs are generated in your browser, and reads come straight from
+        the contract. There is no backend.
       </footer>
     </main>
   );

@@ -27,6 +27,10 @@ export interface ChainReader {
   isVerified(holder: string, credential: string): Promise<boolean>;
   /** On-chain `current_root(credential)` as hex, or null if none published. */
   currentRoot(credential: string): Promise<string | null>;
+  /** On-chain `issuer_of(credential)`, or null if nobody has claimed it. */
+  issuerOf(credential: string): Promise<string | null>;
+  /** On-chain `open_registration()`: whether anyone may claim a free name. */
+  openRegistration(): Promise<boolean>;
 }
 
 export function makeChainReader(cfg: Config): ChainReader {
@@ -69,6 +73,18 @@ export function makeChainReader(cfg: Config): ChainReader {
       if (!retval) return null;
       const value = scValToNative(retval) as Uint8Array | null;
       return value ? bytesToHex(value) : null;
+    },
+
+    async issuerOf(credential) {
+      const retval = await simulateRead("issuer_of", [
+        nativeToScVal(credential, { type: "symbol" }),
+      ]);
+      return retval ? (scValToNative(retval) as string | null) : null;
+    },
+
+    async openRegistration() {
+      const retval = await simulateRead("open_registration", []);
+      return retval ? Boolean(scValToNative(retval)) : false;
     },
   };
 }

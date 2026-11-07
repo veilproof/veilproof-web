@@ -220,3 +220,52 @@ code {
   font-family: ui-monospace, monospace;
   font-size: 0.9em;
 }
+
+.link {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--accent);
+  cursor: pointer;
+  font: inherit;
+}
+
+.tx {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.stack.tight {
+  gap: 4px;
+}
+
+/* The one screen where confusing these two values is unrecoverable. */
+.secret,
+.shareable {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid;
+}
+
+.secret {
+  border-color: var(--err);
+}
+
+.shareable {
+  border-color: var(--ok);
+}
+
+.leaves {
+  padding-left: 24px;
+  margin: 0;
+}
+
+.file {
+  cursor: pointer;
+}
+
+.steps {
+  padding-left: 22px;
+}
