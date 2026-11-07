@@ -86,7 +86,7 @@ export function WalletBar({
           <button onClick={disconnect}>Disconnect</button>
         </>
       ) : (
-        <button onClick={connect} disabled={busy}>
+        <button className="primary" onClick={connect} disabled={busy}>
           {busy ? "Connecting…" : "Connect wallet"}
         </button>
       )}
