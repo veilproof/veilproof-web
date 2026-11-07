@@ -21,9 +21,9 @@ export function StartPage({ config }: { config: Config }) {
       <ol className="stack steps">
         <li>
           Install the <a href="https://varialwallet.com">Varial</a> browser extension (formerly
-          Freighter) and switch it to {networkName(config.networkPassphrase)}. Then{" "}
-          <strong>Connect wallet</strong> and pick <strong>Freighter</strong> in the list, which is
-          still its name there.
+          Freighter) and switch it to {networkName(config.networkPassphrase)}. Then press{" "}
+          <strong>Connect wallet</strong> at the top of the page and pick <strong>Freighter</strong>{" "}
+          in the list, which is still its name there.
           {isTestnet(config.networkPassphrase) ? (
             <>
               {" "}
