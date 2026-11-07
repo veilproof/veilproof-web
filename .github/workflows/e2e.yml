@@ -1,0 +1,22 @@
+name: End to end
+
+# Runs the whole flow against the live testnet registry. This is separate from CI
+# because it depends on the network, and it runs weekly because testnet resets
+# remove the contract without warning: this is how that gets noticed.
+on:
+  schedule:
+    - cron: "17 6 * * 1"
+  workflow_dispatch:
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      # ubuntu-latest has Chrome installed.
+      - run: npm run e2e
