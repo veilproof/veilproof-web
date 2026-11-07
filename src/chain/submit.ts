@@ -1,10 +1,10 @@
-// Building, signing (via the connected wallet), and submitting the two
-// on-chain writes the app performs: `verify_credential` (holder) and
-// `publish_root` (issuer).
+// Building, signing (via the connected wallet), and submitting the on-chain
+// writes the app performs: `verify_credential` (holder), and `claim_credential`
+// and `publish_root` (issuer).
 //
-// Both use the connected wallet's account as the transaction source, so the
-// contract's `require_auth(holder)` / `require_auth(issuer)` is satisfied by
-// the source-account signature — no separate auth-entry signing needed.
+// All use the connected wallet's account as the transaction source, so the
+// contract's `require_auth` on that address is satisfied by the source-account
+// signature — no separate auth-entry signing needed.
 
 import {
   Address,
@@ -17,7 +17,7 @@ import {
 } from "@stellar/stellar-sdk";
 
 import type { Config } from "../config";
-import type { EncodedProof } from "../api/client";
+import type { EncodedProof } from "../prover/client";
 import { signTransaction } from "./wallet";
 
 function hexToBytes(hex: string): Buffer {
@@ -96,6 +96,23 @@ export async function submitVerifyCredential(
     xdr.ScVal.scvBytes(hexToBytes(args.nullifier)),
   );
   return signSendAwait(cfg, server, args.holder, op);
+}
+
+/** Submit `claim_credential`, making the connected wallet the issuer. */
+export async function submitClaimCredential(
+  cfg: Config,
+  issuer: string,
+  credential: string,
+): Promise<string> {
+  const server = new rpc.Server(cfg.rpcUrl, { allowHttp: cfg.rpcUrl.startsWith("http://") });
+  const contract = new Contract(cfg.registryContractId);
+  const op = contract.call(
+    "claim_credential",
+    new Address(issuer).toScVal(),
+    nativeToScVal(credential, { type: "symbol" }),
+    nativeToScVal(cfg.circuit, { type: "symbol" }),
+  );
+  return signSendAwait(cfg, server, issuer, op);
 }
 
 /** Submit `publish_root`, signed by the issuer's connected wallet. */
