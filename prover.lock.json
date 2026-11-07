@@ -1,0 +1,17 @@
+{
+  "vkSha256": "85d36192c03cb9240eeb03cb6a7c8dd954fac43ca31955e01fadd2b58f827218",
+  "assets": {
+    "pk.bin": {
+      "url": "https://github.com/veilproof/veilproof-server/releases/download/keys-testnet/pk.bin",
+      "sha256": "3240415a67097e7aba481f8a4525645c0ed7baa7e8a84677f0c5a54d7a065033"
+    },
+    "vk.bin": {
+      "url": "https://github.com/veilproof/veilproof-server/releases/download/keys-testnet/vk.bin",
+      "sha256": "fa21958cf7f80f5eb305fa43e73e93cc0c1935f0cd6ee2a59c7683f2766a7167"
+    },
+    "veilproof_prover.wasm": {
+      "url": "https://github.com/veilproof/veilproof-server/releases/download/prover-v0.1.0/veilproof_prover.wasm",
+      "sha256": "3618a7dd565d120238e74ce5d411ab4793aa91b08f6844d29b5f8b2d4591516e"
+    }
+  }
+}

@@ -6,3 +6,6 @@ dist-ssr
 .DS_Store
 *.tsbuildinfo
 .vercel
+
+# Fetched and checked by scripts/fetch-prover.mjs, never committed.
+public/prover
